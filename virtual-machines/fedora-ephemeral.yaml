@@ -1,0 +1,53 @@
+apiVersion: kubevirt.io/v1
+kind: VirtualMachine
+metadata:
+  name: vm01
+  namespace: default
+spec:
+  instancetype:
+    name: u1.small
+  preference:
+    name: fedora
+  running: true
+  template:
+    metadata:
+      labels:
+        network.kubevirt.io/headlessService: headless
+    spec:
+      domain:
+        devices:
+          interfaces:
+            - masquerade: {}
+              name: default
+          disks:
+          - disk:
+              bus: virtio
+            name: containerdisk
+          - disk:
+              bus: virtio
+            name: cloudinitdisk
+          rng: {}
+        machine:
+          type: ""
+        #resources:
+        #  requests:
+        #    memory: 1024M 
+      networks:
+        - name: default
+          pod: {}
+      subdomain: headless
+      volumes:
+      - containerDisk:
+          image: quay.io/kubevirt/fedora-cloud-container-disk-demo
+          #image: registry:5000/kubevirt/fedora-with-test-tooling-container-disk:devel
+          #image: quay.io/containerdisks/fedora
+        name: containerdisk
+      - cloudInitNoCloud:
+          userData: |
+            #cloud-config
+            hostname: fedora-0
+            password: PASSWORD_GOES_HERE
+            chpasswd: { expire: False }
+            ssh_pwauth: True
+            disable_root: false
+        name: cloudinitdisk
