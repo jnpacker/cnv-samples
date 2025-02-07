@@ -40,23 +40,7 @@ spec:
                     kind: User
                   - name: user02
                     apiGroup: rbac.authorization.k8s.io
-                    kind: User
-            - complianceType: musthave
-              objectDefinition:
-                kind: User
-                apiVersion: user.openshift.io/v1
-                metadata:
-                  name: user01
-                fullName: user 01
-                groups: null
-            - complianceType: musthave
-              objectDefinition:
-                kind: User
-                apiVersion: user.openshift.io/v1
-                metadata:
-                  name: user02
-                fullName: user 02
-                groups: null
+                    kind: Users
           remediationAction: inform
           severity: high
   remediationAction: enforce
